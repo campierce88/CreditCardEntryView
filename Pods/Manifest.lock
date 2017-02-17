@@ -1,0 +1,15 @@
+PODS:
+  - CardIO (5.4.1)
+  - Stripe (9.4.0)
+
+DEPENDENCIES:
+  - CardIO
+  - Stripe
+
+SPEC CHECKSUMS:
+  CardIO: 56983b39b62f495fc6dae9ad7cf875143df06443
+  Stripe: 0957cc85df5c3df153e6fb44d307ea4b778b6bd1
+
+PODFILE CHECKSUM: edba3dd695d54586dadf4269a1076c18c535d505
+
+COCOAPODS: 1.1.1
