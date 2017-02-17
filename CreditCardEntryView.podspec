@@ -13,5 +13,8 @@ s.ios.deployment_target = '9.0'
 s.source       = { :git => "https://github.com/campierce88/CreditCardEntryView.git", :tag => "#{s.version}" }
 s.source_files  = "CreditCardEntryView/**/*.{swift}"
 s.framework    = "UIKit"
+s.dependency 'Stripe'
+s.dependency 'CardIO'
+s.resources    = "CreditCardEntryView/**/*.{png,jpeg,jpg,storyboard,xib}"
 
 end

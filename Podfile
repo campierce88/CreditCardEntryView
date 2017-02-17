@@ -5,7 +5,6 @@ use_frameworks!
 target 'CreditCardEntryView' do
   # Pods for CreditCardEntryView
   pod 'Stripe'
-  pod 'CardIO'
 end
 
 post_install do | installer |
