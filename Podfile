@@ -7,3 +7,8 @@ target 'CreditCardEntryView' do
   pod 'Stripe'
   pod 'CardIO'
 end
+
+post_install do | installer |
+    require 'fileutils'
+    FileUtils.cp_r('Pods/Target Support Files/Pods-CreditCardEntryView/Pods-`CreditCardEntryView-Acknowledgements.plist', 'Resources/Settings.bundle/Acknowledgements.plist', :remove_destination => true)
+end
