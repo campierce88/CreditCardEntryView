@@ -36,13 +36,12 @@ public protocol CreditCardEntryViewDelegate {
     }
 
     static let defaultSize = CGSize(width: UIScreen.main.bounds.width, height: 103.0)
-    
     @IBInspectable public var cardImages: [SupportedCardType: UIImage?] = [
-        .amex: UIImage(named: "amex"),
-        .discover: UIImage(named: "discover"),
-        .mastercard: UIImage(named: "mastercard"),
-        .visa: UIImage(named: "visa"),
-        .unknown: UIImage(named: "card-empty")
+        .amex: UIImage(named: "amex", in: Bundle(for: CreditCardEntryView.classForCoder()), compatibleWith: nil),
+        .discover: UIImage(named: "discover", in: Bundle(for: CreditCardEntryView.classForCoder()), compatibleWith: nil),
+        .mastercard: UIImage(named: "mastercard", in: Bundle(for: CreditCardEntryView.classForCoder()), compatibleWith: nil),
+        .visa: UIImage(named: "visa", in: Bundle(for: CreditCardEntryView.classForCoder()), compatibleWith: nil),
+        .unknown: UIImage(named: "card-empty", in: Bundle(for: CreditCardEntryView.classForCoder()), compatibleWith: nil)
         ] {
         didSet{
             updateCardImage(for: brand)
@@ -56,7 +55,7 @@ public protocol CreditCardEntryViewDelegate {
             }
         }
     }
-    @IBInspectable public var scannerButtonImage: UIImage? = UIImage(named: "camera") {
+    @IBInspectable public var scannerButtonImage: UIImage? = UIImage(named: "camera", in: Bundle(for: CreditCardEntryView.classForCoder()), compatibleWith: nil) {
         didSet {
             scannerButton.setImage(scannerButtonImage, for: UIControlState())
         }
