@@ -18,6 +18,7 @@ public enum SupportedCardType {
 }
 
 public protocol CreditCardEntryViewDelegate {
+    func openScanner(_ sender: Any)
     func userInputted(cardParams: STPCardParams, thatAre valid: Bool)
     func startingTokenGeneration()
     func generated(_ token: String?)
@@ -43,7 +44,7 @@ public protocol CreditCardEntryViewDelegate {
         .discover: UIImage(named: "discover", in: bundle, compatibleWith: nil),
         .mastercard: UIImage(named: "mastercard", in: bundle, compatibleWith: nil),
         .visa: UIImage(named: "visa", in: bundle, compatibleWith: nil),
-        .unknown: UIImage(named: "card-empty", in: bundle, compatibleWith: nil)
+        .unknown: UIImage(named: "empty-card", in: bundle, compatibleWith: nil)
         ] {
         didSet{
             updateCardImage(for: brand)
@@ -229,6 +230,12 @@ public protocol CreditCardEntryViewDelegate {
         }
     }
     
+    @IBAction func scannerButtonPressed(_ sender: Any) {
+        if hasCardScanner {
+            delegate?.openScanner(sender: sender)
+        }
+    }
+
     func updateCardImage(for brand: STPCardBrand) {
         switch brand {
             case .amex:
