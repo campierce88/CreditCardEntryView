@@ -36,12 +36,14 @@ public protocol CreditCardEntryViewDelegate {
     }
 
     static let defaultSize = CGSize(width: UIScreen.main.bounds.width, height: 103.0)
+    fileprivate static let bundle = Bundle(for: CreditCardEntryView.self)
+
     @IBInspectable public var cardImages: [SupportedCardType: UIImage?] = [
-        .amex: UIImage(named: "amex", in: Bundle(for: CreditCardEntryView.classForCoder()), compatibleWith: nil),
-        .discover: UIImage(named: "discover", in: Bundle(for: CreditCardEntryView.classForCoder()), compatibleWith: nil),
-        .mastercard: UIImage(named: "mastercard", in: Bundle(for: CreditCardEntryView.classForCoder()), compatibleWith: nil),
-        .visa: UIImage(named: "visa", in: Bundle(for: CreditCardEntryView.classForCoder()), compatibleWith: nil),
-        .unknown: UIImage(named: "card-empty", in: Bundle(for: CreditCardEntryView.classForCoder()), compatibleWith: nil)
+        .amex: UIImage(named: "amex", in: bundle, compatibleWith: nil),
+        .discover: UIImage(named: "discover", in: bundle, compatibleWith: nil),
+        .mastercard: UIImage(named: "mastercard", in: bundle, compatibleWith: nil),
+        .visa: UIImage(named: "visa", in: bundle, compatibleWith: nil),
+        .unknown: UIImage(named: "card-empty", in: bundle, compatibleWith: nil)
         ] {
         didSet{
             updateCardImage(for: brand)
@@ -55,9 +57,11 @@ public protocol CreditCardEntryViewDelegate {
             }
         }
     }
-    @IBInspectable public var scannerButtonImage: UIImage? = UIImage(named: "camera", in: Bundle(for: CreditCardEntryView.classForCoder()), compatibleWith: nil) {
+    @IBInspectable public var scannerButtonImage: UIImage? = UIImage(named: "camera", in: bundle, compatibleWith: nil) {
         didSet {
-            scannerButton.setImage(scannerButtonImage, for: UIControlState())
+            if scannerButton != nil {
+                scannerButton.setImage(scannerButtonImage, for: UIControlState())
+            }
         }
     }
     @IBInspectable public var fieldBackgroundColor: UIColor = .white {
@@ -176,8 +180,7 @@ public protocol CreditCardEntryViewDelegate {
     }
     
     func loadFomNib() {
-        let bundle = Bundle(for: type(of: self))
-        if let view = bundle.loadNibNamed("CreditCardEntryView", owner: self, options: nil)?[0] as? UIView {
+        if let view = CreditCardEntryView.bundle.loadNibNamed("CreditCardEntryView", owner: self, options: nil)?[0] as? UIView {
             addSubview(view)
             addConstraints([
                 NSLayoutConstraint(item: view, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 0.0),
