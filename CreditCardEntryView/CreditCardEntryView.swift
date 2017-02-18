@@ -48,7 +48,6 @@ public protocol CreditCardEntryViewDelegate {
             updateCardImage(for: brand)
         }
     }
-
     @IBInspectable public var autoGenerateToken: Bool = false
     @IBInspectable public var hasCardScanner: Bool = true {
         didSet {
