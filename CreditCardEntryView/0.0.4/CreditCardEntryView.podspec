@@ -14,6 +14,6 @@ s.source       = { :git => "https://github.com/campierce88/CreditCardEntryView.g
 s.source_files  = "CreditCardEntryView/**/*.{swift}"
 s.framework    = "UIKit"
 s.dependency 'Stripe'
-s.resources    = "CreditCardEntryView/**/*.{png,jpeg,jpg,storyboard,xib,xcassets,json,imageset}"
+s.resource_bundles = { 'CreditCardEntryView' => ['CreditCardEntryView/**/*.{png,jpeg,jpg,storyboard,xib,xcassets,json,imageset}'] }
 
 end
