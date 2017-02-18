@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
 s.name         = "CreditCardEntryView"
-s.version      = "0.0.3"
+s.version      = "0.0.4"
 s.summary      = "A customizable view for entry of credit card information that uses Stripe for validation."
 s.description  = "This pod creates a IBDesignable view for the entry and vadiation of credit card information. This pod depends on Stripe. You can customize the appearance of the entry fields."
 s.homepage     = "https://github.com/campierce88/CreditCardEntryView.git"
@@ -14,6 +14,6 @@ s.source       = { :git => "https://github.com/campierce88/CreditCardEntryView.g
 s.source_files  = "CreditCardEntryView/**/*.{swift}"
 s.framework    = "UIKit"
 s.dependency 'Stripe'
-s.resources    = "CreditCardEntryView/**/*.{png,jpeg,jpg,storyboard,xib,xcassets,imageset}"
+s.resources    = "CreditCardEntryView/**/*.{png,jpeg,jpg,storyboard,xib,xcassets,json,imageset}"
 
 end
