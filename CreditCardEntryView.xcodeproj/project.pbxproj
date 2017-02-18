@@ -10,11 +10,11 @@
 		538A5EBBE190F6242F9BD15B /* Pods_CreditCardEntryView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A6373512FEAABAA6B247812 /* Pods_CreditCardEntryView.framework */; };
 		D531F1A31E56AF140030E9C4 /* CreditCardEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D531F19F1E56AF140030E9C4 /* CreditCardEntryView.swift */; };
 		D531F1A41E56AF140030E9C4 /* CreditCardEntryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D531F1A01E56AF140030E9C4 /* CreditCardEntryView.xib */; };
-		D531F1BC1E56B5400030E9C4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D531F1B71E56B5400030E9C4 /* Images.xcassets */; };
-		D531F1BD1E56B5400030E9C4 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D531F1B81E56B5400030E9C4 /* Info.plist */; };
-		D531F1C01E56B5400030E9C4 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D531F1BB1E56B5400030E9C4 /* Settings.bundle */; };
 		D531F1C31E56C23A0030E9C4 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = D531F1C11E56C23A0030E9C4 /* LICENSE */; };
 		D531F1C41E56C23A0030E9C4 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = D531F1C21E56C23A0030E9C4 /* README.md */; };
+		D531F1C91E5826EF0030E9C4 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D531F1C71E5826EF0030E9C4 /* Info.plist */; };
+		D531F1CA1E5826EF0030E9C4 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D531F1C81E5826EF0030E9C4 /* Settings.bundle */; };
+		D531F1CE1E5827240030E9C4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D531F1CD1E5827240030E9C4 /* Images.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,11 +23,11 @@
 		D531F1941E569FB50030E9C4 /* CreditCardEntryView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CreditCardEntryView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D531F19F1E56AF140030E9C4 /* CreditCardEntryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreditCardEntryView.swift; sourceTree = "<group>"; };
 		D531F1A01E56AF140030E9C4 /* CreditCardEntryView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CreditCardEntryView.xib; sourceTree = "<group>"; };
-		D531F1B71E56B5400030E9C4 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		D531F1B81E56B5400030E9C4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D531F1BB1E56B5400030E9C4 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		D531F1C11E56C23A0030E9C4 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = SOURCE_ROOT; };
 		D531F1C21E56C23A0030E9C4 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
+		D531F1C71E5826EF0030E9C4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
+		D531F1C81E5826EF0030E9C4 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = SOURCE_ROOT; };
+		D531F1CD1E5827240030E9C4 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = CreditCardEntryView/Images.xcassets; sourceTree = SOURCE_ROOT; };
 		F1FF1946027911FBAE922FE9 /* Pods-CreditCardEntryView.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CreditCardEntryView.release.xcconfig"; path = "Pods/Target Support Files/Pods-CreditCardEntryView/Pods-CreditCardEntryView.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -63,7 +63,6 @@
 		D531F18A1E569FB50030E9C4 = {
 			isa = PBXGroup;
 			children = (
-				D531F1B61E56B5400030E9C4 /* Resources */,
 				D531F1961E569FB50030E9C4 /* CreditCardEntryView */,
 				D531F1951E569FB50030E9C4 /* Products */,
 				C68F4D3469ED5880E39996DD /* Pods */,
@@ -82,6 +81,7 @@
 		D531F1961E569FB50030E9C4 /* CreditCardEntryView */ = {
 			isa = PBXGroup;
 			children = (
+				D531F1B61E56B5400030E9C4 /* Resources */,
 				D531F19F1E56AF140030E9C4 /* CreditCardEntryView.swift */,
 				D531F1A01E56AF140030E9C4 /* CreditCardEntryView.xib */,
 			);
@@ -91,13 +91,14 @@
 		D531F1B61E56B5400030E9C4 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D531F1CD1E5827240030E9C4 /* Images.xcassets */,
 				D531F1C11E56C23A0030E9C4 /* LICENSE */,
 				D531F1C21E56C23A0030E9C4 /* README.md */,
-				D531F1B71E56B5400030E9C4 /* Images.xcassets */,
-				D531F1B81E56B5400030E9C4 /* Info.plist */,
-				D531F1BB1E56B5400030E9C4 /* Settings.bundle */,
+				D531F1C71E5826EF0030E9C4 /* Info.plist */,
+				D531F1C81E5826EF0030E9C4 /* Settings.bundle */,
 			);
-			path = Resources;
+			name = Resources;
+			path = ../Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -172,11 +173,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D531F1CA1E5826EF0030E9C4 /* Settings.bundle in Resources */,
+				D531F1CE1E5827240030E9C4 /* Images.xcassets in Resources */,
 				D531F1A41E56AF140030E9C4 /* CreditCardEntryView.xib in Resources */,
-				D531F1BC1E56B5400030E9C4 /* Images.xcassets in Resources */,
-				D531F1C01E56B5400030E9C4 /* Settings.bundle in Resources */,
-				D531F1BD1E56B5400030E9C4 /* Info.plist in Resources */,
 				D531F1C31E56C23A0030E9C4 /* LICENSE in Resources */,
+				D531F1C91E5826EF0030E9C4 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
