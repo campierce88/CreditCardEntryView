@@ -7,14 +7,25 @@
 //
 
 import UIKit
+import Stripe
+
+public enum SupportedCardType {
+    case amex
+    case discover
+    case mastercard
+    case visa
+    case unknown
+}
 
 public protocol CreditCardEntryViewDelegate {
+    func userInputted(cardParams: STPCardParams, thatAre valid: Bool)
+    func startingTokenGeneration()
     func generated(_ token: String?)
 }
 
 @IBDesignable public class CreditCardEntryView: UIView {
     
-    private var identifier: String = "CreditCardResignOnMissTextViewEntryView"
+    private var identifier: String = "CreditCardEntryView"
     
     override public var restorationIdentifier: String? {
         get {
@@ -26,11 +37,29 @@ public protocol CreditCardEntryViewDelegate {
 
     static let defaultSize = CGSize(width: UIScreen.main.bounds.width, height: 103.0)
     
+    @IBInspectable public var cardImages: [SupportedCardType: UIImage?] = [
+        .amex: UIImage(named: "amex"),
+        .discover: UIImage(named: "discover"),
+        .mastercard: UIImage(named: "mastercard"),
+        .visa: UIImage(named: "visa"),
+        .unknown: UIImage(named: "card-empty")
+        ] {
+        didSet{
+            updateCardImage(for: brand)
+        }
+    }
+
+    @IBInspectable public var autoGenerateToken: Bool = false
     @IBInspectable public var hasCardScanner: Bool = true {
         didSet {
             if containerStackView != nil {
                 scannerButton.isHidden = !hasCardScanner
             }
+        }
+    }
+    @IBInspectable public var scannerButtonImage: UIImage? = UIImage(named: "camera") {
+        didSet {
+            scannerButton.setImage(scannerButtonImage, for: UIControlState())
         }
     }
     @IBInspectable public var fieldBackgroundColor: UIColor = .white {
@@ -98,8 +127,15 @@ public protocol CreditCardEntryViewDelegate {
             return false
         }
     }
+    
     public var delegate: CreditCardEntryViewDelegate?
-
+    public var cardParams: STPCardParams = STPCardParams()
+    fileprivate var brand: STPCardBrand = .unknown {
+        didSet {
+            updateCardImage(for: brand)
+        }
+    }
+    
     @IBOutlet weak var containerStackView: UIView!
     @IBOutlet weak var topHDivider: UIView!
     @IBOutlet weak var middleHDivider: UIView!
@@ -187,11 +223,79 @@ public protocol CreditCardEntryViewDelegate {
             cvcLeftVDivider.backgroundColor = vDividerColor
             
             scannerButton.isHidden = hasCardScanner
+            
+            brand = .unknown
+        }
+    }
+    
+    func updateCardImage(for brand: STPCardBrand) {
+        switch brand {
+            case .amex:
+                cardImageView.image = cardImages[SupportedCardType.amex] ?? nil
+            case .discover:
+                cardImageView.image = cardImages[SupportedCardType.discover] ?? nil
+            case .masterCard:
+                cardImageView.image = cardImages[SupportedCardType.mastercard] ?? nil
+            case .visa:
+                cardImageView.image = cardImages[SupportedCardType.visa] ?? nil
+            default:
+                cardImageView.image = cardImages[SupportedCardType.unknown] ?? nil
         }
     }
 
+    func generateStripeToken() {
+        isUserInteractionEnabled = false
+        
+        delegate?.startingTokenGeneration()
+        STPAPIClient.shared().createToken(withCard: cardParams) { (token, error) in
+            if let error = error {
+                print("error getting stripe card token: \(error)")
+            }
+            
+            self.isUserInteractionEnabled = true
+            self.delegate?.generated(token?.tokenId)
+        }
+    }
+    
     func validateCreditCard(for textField: UITextField) -> Bool {
-        return false
+        var isValid: STPCardValidationState = .incomplete
+        if textField == numberTextField {
+            let number = numberTextField.text ?? ""
+            isValid = STPCardValidator.validationState(forNumber: number, validatingCardBrand: true)
+            if isValid == .valid {
+                cardParams.number = number
+            }
+        } else if textField == expTextField {
+            let exp = expTextField.text ?? ""
+            let month = exp.substring(to: exp.index(exp.startIndex, offsetBy: max(0, 2)))
+            let year = exp.substring(from: exp.index(exp.startIndex, offsetBy: max(0, 3)))
+            isValid = STPCardValidator.validationState(forExpirationYear: year, inMonth: month)
+            if isValid == .valid {
+                cardParams.expMonth = UInt(month) ?? 0
+                cardParams.expYear = UInt(year) ?? 0
+            }
+        } else if textField == cvcTextField {
+            let cvc = cvcTextField.text ?? ""
+            isValid = STPCardValidator.validationState(forCVC: cvc, cardBrand: brand)
+            if isValid == .valid {
+                cardParams.cvc = cvc
+            }
+        } else if textField == zipTextField {
+            isValid = .valid
+            cardParams.addressZip = zipTextField.text
+        }
+        
+        if let _ = cardParams.number, let _ = cardParams.cvc, let _ = cardParams.addressZip, cardParams.expMonth != 0, cardParams.expYear != 0 {
+            delegate?.userInputted(cardParams: cardParams, thatAre: true)
+            if autoGenerateToken {
+                isValid = STPCardValidator.validationState(forCard: cardParams)
+                generateStripeToken()
+            }
+        } else {
+            delegate?.userInputted(cardParams: cardParams, thatAre: false)
+        }
+        
+        return isValid == .valid
     }
     
     func textChanged(_ textField: UITextField) {
@@ -210,13 +314,32 @@ public protocol CreditCardEntryViewDelegate {
 
 extension CreditCardEntryView: UITextFieldDelegate {
     
+    fileprivate func clearCardParam(for textField: UITextField) {
+        if textField == numberTextField {
+            cardParams.number = nil
+        } else if textField == expTextField {
+            cardParams.expYear = 0
+            cardParams.expMonth = 0
+        } else if textField == cvcTextField {
+            cardParams.cvc = nil
+        } else if textField == zipTextField {
+            cardParams.addressZip = nil
+        }
+        
+        delegate?.userInputted(cardParams: cardParams, thatAre: false)
+    }
+    
     fileprivate func maxLength(for textField: UITextField) -> Int? {
         if textField == numberTextField {
             return 19
         } else if textField == expTextField {
             return 5
         } else if textField == cvcTextField {
-            return 4
+            if brand == .amex {
+                return 4
+            } else {
+                return 3
+            }
         } else if textField == zipTextField {
             return 5
         } else {
@@ -231,8 +354,6 @@ extension CreditCardEntryView: UITextFieldDelegate {
             cvcTextField?.becomeFirstResponder()
         } else if textField == cvcTextField {
             zipTextField?.becomeFirstResponder()
-        } else if textField == zipTextField {
-            zipTextField.resignFirstResponder()
         } else {
             return false
         }
@@ -254,6 +375,8 @@ extension CreditCardEntryView: UITextFieldDelegate {
         let count = text.characters.count
         
         if textField == numberTextField {
+            brand = STPCardValidator.brand(forNumber: newString)
+
             if (count == 4 || count == 9 || count == 14) && count < newString.characters.count {
                 return "\(text) "
             } else if (count == 6 || count == 11 || count == 16) && count > newString.characters.count {
@@ -274,6 +397,7 @@ extension CreditCardEntryView: UITextFieldDelegate {
     
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let shouldEdit = canEdit(textField, for: range, with: string, and: maxLength(for: textField) ?? 0)
+        clearCardParam(for: textField)
         textField.text = format(textField, for: range, with: string)
         return shouldEdit
     }
