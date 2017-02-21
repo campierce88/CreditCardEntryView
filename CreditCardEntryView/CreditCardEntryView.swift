@@ -132,7 +132,26 @@ public protocol CreditCardEntryViewDelegate {
     }
     
     public var delegate: CreditCardEntryViewDelegate?
-    public var cardParams: STPCardParams = STPCardParams()
+    public var cardParams: STPCardParams = STPCardParams() {
+        didSet {
+            if containerStackView != nil {
+                if let number = cardParams.number, number.characters.count == 16 {
+                    let ccFirst4 = number.substring(to: number.index(number.startIndex, offsetBy: max(0, 4)))
+                    let ccSecond4 = number.substring(with: number.index(number.startIndex, offsetBy: max(0, 4))..<number.index(number.startIndex, offsetBy: max(0, 8)))
+                    let ccThird4 = number.substring(with: number.index(number.startIndex, offsetBy: max(0, 8))..<number.index(number.startIndex, offsetBy: max(0, 12)))
+                    let ccLast4 = number.substring(from: number.index(number.startIndex, offsetBy: max(0, 12)))
+                    numberTextField.text = "\(ccFirst4) \(ccSecond4) \(ccThird4) \(ccLast4)"
+                }
+                if cardParams.expMonth != 0 && cardParams.expYear != 0 {
+                    let expMonth = String(format: "%02d", cardParams.expMonth)
+                    let expYear = String(format: "%02d", cardParams.expYear)
+                    expTextField.text = "\(expMonth)/\(expYear)"
+                }
+                cvcTextField.text = cardParams.cvc
+                zipTextField.text = cardParams.addressZip
+            }
+        }
+    }
     fileprivate var brand: STPCardBrand = .unknown {
         didSet {
             updateCardImage(for: brand)
