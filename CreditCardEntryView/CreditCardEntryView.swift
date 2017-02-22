@@ -135,12 +135,9 @@ public protocol CreditCardEntryViewDelegate {
     public var cardParams: STPCardParams = STPCardParams() {
         didSet {
             if containerStackView != nil {
-                if let number = cardParams.number, number.characters.count == 16 {
-                    let ccFirst4 = number.substring(to: number.index(number.startIndex, offsetBy: max(0, 4)))
-                    let ccSecond4 = number.substring(with: number.index(number.startIndex, offsetBy: max(0, 4))..<number.index(number.startIndex, offsetBy: max(0, 8)))
-                    let ccThird4 = number.substring(with: number.index(number.startIndex, offsetBy: max(0, 8))..<number.index(number.startIndex, offsetBy: max(0, 12)))
-                    let ccLast4 = number.substring(from: number.index(number.startIndex, offsetBy: max(0, 12)))
-                    numberTextField.text = "\(ccFirst4) \(ccSecond4) \(ccThird4) \(ccLast4)"
+                if let number = cardParams.number {
+                    brand = STPCardValidator.brand(forNumber: number)
+                    numberTextField.text = addSpaces(to: number, for: brand)
                 }
                 if cardParams.expMonth != 0 && cardParams.expYear != 0 {
                     let expMonth = String(format: "%02d", cardParams.expMonth)
@@ -283,7 +280,46 @@ public protocol CreditCardEntryViewDelegate {
             self.delegate?.generated(token?.tokenId)
         }
     }
-    
+
+    func addSpaces(to number: String, for brand: STPCardBrand) -> String {
+        switch brand {
+            case .amex:
+                guard number.characters.count == 15 else { return "" }
+
+                let ccFirst4 = number.substring(to: number.index(number.startIndex, offsetBy: max(0, 4)))
+                let ccSecond6 = number.substring(with: number.index(number.startIndex, offsetBy: max(0, 4))..<number.index(number.startIndex, offsetBy: max(0, 10)))
+                let ccLast5 = number.substring(from: number.index(number.startIndex, offsetBy: max(0, 10)))
+                return "\(ccFirst4) \(ccSecond6) \(ccLast5)"
+            default:
+                guard number.characters.count == 16 else { return "" }
+
+                let ccFirst4 = number.substring(to: number.index(number.startIndex, offsetBy: max(0, 4)))
+                let ccSecond4 = number.substring(with: number.index(number.startIndex, offsetBy: max(0, 4))..<number.index(number.startIndex, offsetBy: max(0, 8)))
+                let ccThird4 = number.substring(with: number.index(number.startIndex, offsetBy: max(0, 8))..<number.index(number.startIndex, offsetBy: max(0, 12)))
+                let ccLast4 = number.substring(from: number.index(number.startIndex, offsetBy: max(0, 12)))
+                return "\(ccFirst4) \(ccSecond4) \(ccThird4) \(ccLast4)"
+            }
+    }
+
+    func shouldEditNumberSpacing(for brand: STPCardBrand, and digit: Int, isIncreasing: Bool) -> Bool {
+        var addSpacesIndices: [Int]
+        var removeSpacesIndices: [Int]
+        switch brand {
+            case .amex:
+                addSpacesIndices = [4, 11]
+                removeSpacesIndices = [6, 13]
+            default:
+                addSpacesIndices = [4, 9, 14]
+                removeSpacesIndices = [6, 11, 16]
+        }
+
+        if isIncreasing {
+            return addSpacesIndices.contains(digit)
+        } else {
+            return removeSpacesIndices.contains(digit)
+        }
+    }
+
     func validateCreditCard(for textField: UITextField) -> Bool {
         var isValid: STPCardValidationState = .incomplete
         if textField == numberTextField {
@@ -358,14 +394,20 @@ extension CreditCardEntryView: UITextFieldDelegate {
     
     fileprivate func maxLength(for textField: UITextField) -> Int? {
         if textField == numberTextField {
-            return 19
+            switch brand {
+                case .amex:
+                    return 17 // 15 digits and 2 spaces
+                default:
+                    return 19 // 16 digits and 3 spaces
+            }
         } else if textField == expTextField {
             return 5
         } else if textField == cvcTextField {
-            if brand == .amex {
-                return 4
-            } else {
-                return 3
+            switch brand {
+                case .amex:
+                    return 4
+                default:
+                    return 3
             }
         } else if textField == zipTextField {
             return 5
@@ -404,9 +446,9 @@ extension CreditCardEntryView: UITextFieldDelegate {
         if textField == numberTextField {
             brand = STPCardValidator.brand(forNumber: newString)
 
-            if (count == 4 || count == 9 || count == 14) && count < newString.characters.count {
+            if shouldEditNumberSpacing(for: brand, and: count, isIncreasing: true) && count < newString.characters.count {
                 return "\(text) "
-            } else if (count == 6 || count == 11 || count == 16) && count > newString.characters.count {
+            } else if shouldEditNumberSpacing(for: brand, and: count, isIncreasing: false) && count > newString.characters.count {
                 let endIndex = text.index(text.startIndex, offsetBy: max(0, count-1))
                 return text.substring(to: endIndex)
             }
