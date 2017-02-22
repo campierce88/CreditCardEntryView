@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
 s.name         = "CreditCardEntryView"
-s.version      = "0.1.2"
+s.version      = "0.1.3"
 s.summary      = "A customizable view for entry of credit card information that uses Stripe for validation."
 s.description  = "This pod creates a IBDesignable view for the entry and vadiation of credit card information. This pod depends on Stripe. You can customize the appearance of the entry fields."
 s.homepage     = "https://github.com/campierce88/CreditCardEntryView.git"
