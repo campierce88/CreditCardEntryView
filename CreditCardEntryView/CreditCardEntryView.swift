@@ -142,7 +142,8 @@ public protocol CreditCardEntryViewDelegate {
                 if cardParams.expMonth != 0 && cardParams.expYear != 0 {
                     let expMonth = String(format: "%02d", cardParams.expMonth)
                     let expYear = String(format: "%02d", cardParams.expYear)
-                    expTextField.text = "\(expMonth)/\(expYear)"
+                    let truncatedExpYear = expYear.substring(from: expYear.index(expYear.startIndex, offsetBy: max(0, 2)))
+                    expTextField.text = "\(expMonth)/\(truncatedExpYear)"
                 }
                 cvcTextField.text = cardParams.cvc
                 zipTextField.text = cardParams.addressZip
@@ -466,7 +467,9 @@ extension CreditCardEntryView: UITextFieldDelegate {
     
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let shouldEdit = canEdit(textField, for: range, with: string, and: maxLength(for: textField) ?? 0)
-        clearCardParam(for: textField)
+        if shouldEdit {
+            clearCardParam(for: textField)
+        }
         textField.text = format(textField, for: range, with: string)
         return shouldEdit
     }
